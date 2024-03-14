@@ -4,9 +4,19 @@ using quiz_console_app.ViewModels;
 
 namespace quiz_console_app.Services;
 
-public static class QuizService
+public  class QuizService
 {
-    public static List<BookletViewModel> GenerateBooklets(List<Question> questions, int shuffleCount = 1)
+    public  List<BookletViewModel> Booklets { get; private set; }
+    public  List<AnswerKeyViewModel> AnswerKeys { get; private set; }
+
+
+    public QuizService()
+    {
+        Booklets = new List<BookletViewModel>();
+        AnswerKeys = new List<AnswerKeyViewModel>();
+    }
+
+    public void GenerateBooklets(List<Question> questions, int shuffleCount = 1)
     {
         List<Question> shuffledQuestions = new List<Question>();
 
@@ -16,8 +26,6 @@ public static class QuizService
         for (int i = 0; i < shuffleCount; i++)
         {
             List<Question> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(questions);
-
-           
 
             BookletViewModel booklet = new BookletViewModel
             {
@@ -29,10 +37,22 @@ public static class QuizService
             QuestionShuffler.ShuffleBookletQuestions(booklet);
 
             booklets.Add(booklet);
+
         }
 
-        return booklets;
+        Booklets = booklets;
     }
+
+    public void GenerateAnswerKey(List<BookletViewModel> booklets)
+    {
+        List<AnswerKeyViewModel> answerKeys = new List<AnswerKeyViewModel>();
+
+
+        AnswerKeys = answerKeys;
+    }
+
+
+
 
     private static QuestionViewModel MapToQuestionViewModel(Question question)
     {

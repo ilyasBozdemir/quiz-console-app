@@ -20,8 +20,7 @@ public class QuestionShuffler
 
     public static List<Question> ShuffleQuestionOptions(List<Question> questions)
     {
-        Random random = new Random();
-
+  
         foreach (var question in questions)
         {
             List<QuestionOption> shuffledOptions = ShuffleOptions(question.QuestionOptions, random);
@@ -30,6 +29,7 @@ public class QuestionShuffler
 
         return questions;
     }
+
 
     private static List<QuestionOption> ShuffleOptions(List<QuestionOption> options, Random random)
     {
