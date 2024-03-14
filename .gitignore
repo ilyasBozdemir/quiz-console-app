@@ -1,0 +1,14 @@
+# Visual Studio'nun kendi dosyaları
+.vs/
+
+# Proje derlemesi ve çıktı dosyaları
+bin/
+obj/
+
+# Visual Studio'nun önerileri
+.vscode/
+
+# Kullanıcı spesifik dosyaları (örneğin, kullanıcı bazlı proje yapılandırma dosyaları)
+*.suo
+*.user
+*.sln.docstates

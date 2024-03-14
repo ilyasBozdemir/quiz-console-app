@@ -1,0 +1,16 @@
+﻿using quiz_console_app.Enums;
+
+namespace quiz_console_app.Models;
+
+public class Booklet
+{
+    public int Id { get; set; }
+    public string BookletName { get; set; }
+    public List<Question> Questions { get; set; }
+    public OptionType OptionType { get; set; }
+
+    public Booklet()
+    {
+        Questions = new List<Question>();
+    }
+}
