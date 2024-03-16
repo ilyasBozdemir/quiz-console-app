@@ -7,7 +7,6 @@ public class Booklet
     public int Id { get; set; }
     public string BookletName { get; set; }
     public List<Question> Questions { get; set; }
-    public OptionType OptionType { get; set; }
 
     public Booklet()
     {

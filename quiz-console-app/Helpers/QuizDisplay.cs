@@ -8,7 +8,6 @@ public class QuizDisplay
     {
         foreach (var booklet in booklets)
         {
-            Console.WriteLine();
             ConsoleHelper.WriteColored("Kitapçık Id: ", ConsoleColors.Info);
             ConsoleHelper.WriteColoredLine(booklet.Id, ConsoleColors.Default);
 
@@ -44,6 +43,9 @@ public class QuizDisplay
         }
 
         ConsoleHelper.WriteColored("Cevap Anahtarları:", ConsoleColors.Info);
+
+        int questionNumber = 1;
+
         foreach (var answerKey in answerKeys)
         {
             ConsoleHelper.WriteColored("Kitapçık Id: ", ConsoleColors.Info);
@@ -52,8 +54,12 @@ public class QuizDisplay
             ConsoleHelper.WriteColored(" Soru Id: ", ConsoleColors.Info);
             ConsoleHelper.WriteColoredLine(answerKey.QuestionId, ConsoleColors.Default);
 
-            ConsoleHelper.WriteColored(" Doğru Seçenek Id: ", ConsoleColors.Info);
-            ConsoleHelper.WriteColoredLine(answerKey.CorrectOptionId, ConsoleColors.Default);
+            ConsoleHelper.WriteColored(" Doğru Seçenek : ", ConsoleColors.Info);
+            ConsoleHelper.WriteColored(answerKey.CorrectOptionText, ConsoleColors.Default);
+
+            ConsoleHelper.WriteColoredLine(answerKey.CorrectOptionText, ConsoleColors.Default);
+
+            questionNumber++;
         }
     }
 }

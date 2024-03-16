@@ -7,6 +7,6 @@ public static class ConsoleColors
     public static readonly ConsoleColor Title = ConsoleColor.DarkGreen;
     public static readonly ConsoleColor Info = ConsoleColor.DarkBlue;
     public static readonly ConsoleColor Warning = ConsoleColor.Yellow;
-    public static readonly ConsoleColor Debug = ConsoleColor.Magenta;
-    public static readonly ConsoleColor Prompt = ConsoleColor.Cyan;
+    public static readonly ConsoleColor Debug = ConsoleColor.Cyan;
+    public static readonly ConsoleColor Prompt = ConsoleColor.Magenta;
 }

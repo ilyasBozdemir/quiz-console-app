@@ -16,6 +16,44 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 3. Kitapçık seçildikten sonra, kullanıcı soruları çözebilir.
 4. Soruları çözdükten sonra, kullanıcı cevap anahtarlarını görüntüleyebilir.
 
+## Veri Örneği
+
+Örnek JSON veri:
+
+```json
+[
+  {
+    "Id": 1,
+    "AskText": "Android uygulama geliştirmede en yaygın kullanılan programlama dili nedir?",
+    "Explanation": null,
+    "Difficulty": "Medium",
+    "QuestionOptions": [
+      {
+        "Id": 1,
+        "Text": "Java",
+        "IsCorrect": true
+      },
+      {
+        "Id": 2,
+        "Text": "C#",
+        "IsCorrect": false
+      },
+      {
+        "Id": 3,
+        "Text": "Python",
+        "IsCorrect": false
+      },
+      {
+        "Id": 4,
+        "Text": "JavaScript",
+        "IsCorrect": false
+      }
+    ]
+  }
+]
+
+```
+
 ## Özellikler
 
 - Kullanıcı dostu arayüz
@@ -32,7 +70,7 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 
 ## Kurulum
 
-1. Bu depoyu klonlayın: `https://github.com/ilyasBozdemir/quiz-console-app`
+1. Bu depoyu klonlayın: `git clone https://github.com/ilyasBozdemir/quiz-console-app`
 2. Visual Studio'da çözümü açın: `quiz-console-app.sln`
 3. Uygulamayı derleyin ve çalıştırın.
 
@@ -40,8 +78,8 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 
 1. Bu depoyu çatallayın (fork).
 2. Yeni bir dal (branch) oluşturun: `git checkout -b new-feature`
-3. Değişikliklerinizi yapın ve bunları işleyin (commit): `git commit -am 'Yeni özellik ekle'`
-4. Dalınızı ana depoya gönderin (push): `git push origin yeni-ozellik`
+3. Değişikliklerinizi yapın ve bunları işleyin (commit): `git commit -m 'Yeni özellik ekle'`
+4. Dalınızı ana depoya gönderin (push): `git push origin new-feature`
 5. Bir birleştirme isteği (pull request) gönderin.
 
 ## Lisans
