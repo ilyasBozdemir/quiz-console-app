@@ -5,13 +5,24 @@ using quiz_console_app.Models;
 namespace quiz_console_app.Helpers;
 public class QuestionLoader
 {
-    public List<Question> LoadQuestionsFromJson(string jsonFilePath)
+    public List<BookletQuestion> LoadQuestionsFromJson(string jsonFilePath = null, string jsonSource = null)
     {
         try
         {
-            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, jsonFilePath);
-            string json = File.ReadAllText(fullPath);
-            List<Question> questions = JsonConvert.DeserializeObject<List<Question>>(json);
+            string json = null, fullPath = null;
+
+            if (jsonFilePath != null)
+            {
+                fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, jsonFilePath);
+                json = File.ReadAllText(fullPath);
+            }
+            if (jsonSource != null)
+            {
+                json = jsonSource;
+            }
+            
+        
+            List<BookletQuestion> questions = JsonConvert.DeserializeObject<List<BookletQuestion>>(json);
             return questions;
         }
         catch (JsonLoadFailedException ex)
@@ -19,7 +30,7 @@ public class QuestionLoader
             throw new JsonLoadFailedException("JSON dosyası yüklenirken bir hata oluştu.", ex);
         }
     }
-    public async Task<List<Question>> LoadQuestionsFromUrl(Uri url)
+    public async Task<List<BookletQuestion>> LoadQuestionsFromUrl(Uri url)
     {
         try
         {
@@ -32,13 +43,13 @@ public class QuestionLoader
 
                 if (contentType != "application/json")
                     throw new InvalidOperationException($"Beklenen JSON içeriği değil., alınan medya türü: {contentType}");
-                
+
 
                 if (response.IsSuccessStatusCode)
-                    return LoadQuestionsFromJson(await response.Content.ReadAsStringAsync());
+                    return LoadQuestionsFromJson(jsonFilePath: null, jsonSource: await response.Content.ReadAsStringAsync());
                 else
                     throw new Exception("API'den veri alınamadı. Hata kodu: " + response.StatusCode);
-                
+
             }
         }
         catch (Exception ex)
@@ -46,5 +57,5 @@ public class QuestionLoader
             throw new Exception("Hata oluştu: " + ex.Message);
         }
     }
-  
+
 }

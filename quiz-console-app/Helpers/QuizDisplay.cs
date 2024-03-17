@@ -1,4 +1,5 @@
-﻿using quiz_console_app.ViewModels;
+﻿using quiz_console_app.Models;
+using quiz_console_app.ViewModels;
 
 namespace quiz_console_app.Helpers;
 
@@ -61,5 +62,15 @@ public class QuizDisplay
 
             questionNumber++;
         }
+    }
+
+    public static void EvaluateQuizResults(QuizResultSummary resultSummary)
+    {
+        Console.WriteLine();
+        ConsoleHelper.WriteColoredLine($"Doğru Sayısı: {resultSummary.CorrectCount}", ConsoleColors.Success);
+        ConsoleHelper.WriteColoredLine($"Yanlış Sayısı: {resultSummary.IncorrectCount}", ConsoleColors.Error);
+        ConsoleHelper.WriteColoredLine($"Boş Sayısı: {resultSummary.BlankCount}", ConsoleColors.Warning);
+        ConsoleHelper.WriteColoredLine($"Net: {resultSummary.NetCount}", ConsoleColors.Default);
+        ConsoleHelper.WriteColoredLine($"Başarı Yüzdesi: {resultSummary.SuccessPercentage:F2}%", ConsoleColors.Info);
     }
 }

@@ -8,16 +8,14 @@ public class QuizService
 {
     public static List<BookletViewModel> Booklets { get; private set; }
     public static List<AnswerKeyViewModel> AnswerKeys { get; private set; }
-    public static List<Question> Questions { get; private set; }
-
+    public static List<BookletQuestion> Questions { get; private set; }
     private int maxShuffleCount = 10;
     public QuizService()
     {
         Booklets = new List<BookletViewModel>();
         AnswerKeys = new List<AnswerKeyViewModel>();
     }
-
-    public void GenerateBooklets(List<Question> questions, int shuffleCount = 1)
+    public void GenerateBooklets(List<BookletQuestion> questions, int shuffleCount = 1)
     {
 
         shuffleCount = Math.Min(shuffleCount, maxShuffleCount);
@@ -26,7 +24,7 @@ public class QuizService
         
         Questions = questions;
 
-        List<Question> shuffledQuestions = new List<Question>();
+        List<BookletQuestion> shuffledQuestions = new List<BookletQuestion>();
 
         List<BookletViewModel> booklets = new List<BookletViewModel>();
 
@@ -36,7 +34,7 @@ public class QuizService
             char prefix = (char)(65 + i);
             string bookletName = $"{prefix}_{1}"; 
 
-            List<Question> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(questions);
+            List<BookletQuestion> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(questions);
 
             BookletViewModel booklet = new BookletViewModel
             {
@@ -51,7 +49,6 @@ public class QuizService
 
         Booklets = booklets;
     }
-
     public  List<AnswerKeyViewModel> GenerateAnswerKeys()
     {
         List<AnswerKeyViewModel> answerKeys = new List<AnswerKeyViewModel>();
@@ -73,15 +70,52 @@ public class QuizService
 
         return answerKeys;
     }
-
-
     public void EvaluateQuizResults(List<UserAnswerKeyViewModel> userAnswers)
     {
-        
+        QuizResultSummary resultSummary = new QuizResultSummary(userAnswers.Count);
+
+        ConsoleHelper.WriteColoredLine($"Cevaplar", ConsoleColors.Title);
+        foreach (var userAnswer in userAnswers)
+        {
+            string formattedQuestionNumber = FormattingHelper.FormatQuestionNumber(resultSummary.QuestionCurrentNumber, resultSummary.TotalQuestions);
+            ConsoleHelper.WriteColored($"{formattedQuestionNumber})", ConsoleColors.Default);
+            
+            if (string.IsNullOrEmpty(userAnswer.UserAnswerOption))
+            {
+                resultSummary.BlankCount++;
+                ConsoleHelper.WriteColored(" - Boş", ConsoleColors.Warning);
+            }
+            else
+            {
+                var correspondingQuestion = Booklets
+                    .SelectMany(booklet => booklet.Questions)
+                    .FirstOrDefault(question => question.Id == userAnswer.QuestionId);
+
+                if (correspondingQuestion != null)
+                {
+                    var correctOption = correspondingQuestion.QuestionOptions
+                        .FirstOrDefault(option => option.IsCorrect && option.Text == userAnswer.UserAnswerOption);
+
+                    if (correctOption != null)
+                    {
+                        ConsoleHelper.WriteColored($"{userAnswer.UserAnswerOption} ", ConsoleColors.Info);
+                        ConsoleHelper.WriteColored(" - Doğru", ConsoleColors.Success);
+                        resultSummary.CorrectCount++;
+                    }
+                    else
+                    {
+                        ConsoleHelper.WriteColored($"{userAnswer.UserAnswerOption} ", ConsoleColors.Info);
+                        ConsoleHelper.WriteColored(" - Yanlış", ConsoleColors.Error);
+                        resultSummary.IncorrectCount++;
+                    }
+                }
+            }
+            Console.WriteLine();
+            resultSummary.QuestionCurrentNumber++;
+        }
+        QuizDisplay.EvaluateQuizResults(resultSummary);
     }
-
-
-    private static QuestionViewModel MapToQuestionViewModel(Question question)
+    private static QuestionViewModel MapToQuestionViewModel(BookletQuestion question)
     {
         return new QuestionViewModel
         {
@@ -93,8 +127,7 @@ public class QuizService
             .Select(o => MapToQuestionOptionViewModel(o)).ToList()
         };
     }
-
-    private static QuestionOptionViewModel MapToQuestionOptionViewModel(QuestionOption option)
+    private static QuestionOptionViewModel MapToQuestionOptionViewModel(BookletQuestionOption option)
     {
         return new QuestionOptionViewModel
         {

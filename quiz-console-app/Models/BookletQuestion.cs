@@ -2,15 +2,15 @@
 
 namespace quiz_console_app.Models;
 
-public class Question
+public class BookletQuestion
 {
     public int Id { get; set; }
     public string AskText { get; set; }
     public string Explanation { get; set; }
     public DifficultyLevel Difficulty { get; set; }
-    public List<QuestionOption> QuestionOptions { get; set; }
-    public Question()
+    public List<BookletQuestionOption> QuestionOptions { get; set; }
+    public BookletQuestion()
     {
-        QuestionOptions = new List<QuestionOption>();
+        QuestionOptions = new List<BookletQuestionOption>();
     }
 }

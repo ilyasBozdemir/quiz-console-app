@@ -18,12 +18,12 @@ public class QuestionShuffler
     }
 
 
-    public static List<Question> ShuffleQuestionOptions(List<Question> questions)
+    public static List<BookletQuestion> ShuffleQuestionOptions(List<BookletQuestion> questions)
     {
   
         foreach (var question in questions)
         {
-            List<QuestionOption> shuffledOptions = ShuffleOptions(question.QuestionOptions, random);
+            List<BookletQuestionOption> shuffledOptions = ShuffleOptions(question.QuestionOptions, random);
             question.QuestionOptions = shuffledOptions;
         }
 
@@ -31,12 +31,12 @@ public class QuestionShuffler
     }
 
 
-    private static List<QuestionOption> ShuffleOptions(List<QuestionOption> options, Random random)
+    private static List<BookletQuestionOption> ShuffleOptions(List<BookletQuestionOption> options, Random random)
     {
         for (int i = options.Count - 1; i > 0; i--)
         {
             int j = random.Next(0, i + 1);
-            QuestionOption temp = options[i];
+            BookletQuestionOption temp = options[i];
             options[i] = options[j];
             options[j] = temp;
         }

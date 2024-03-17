@@ -12,7 +12,7 @@ public class QuizModeHandlerService
         switch (mode)
         {
             case QuizMode.Quiz:
-               new QuizModeScreen().Start();
+               new QuizModeScreen().StartQuiz();
                 break;
             case QuizMode.DisplayBooklets:
                 new DisplayBookletScreen().Start();
@@ -73,7 +73,7 @@ public class QuizModeHandlerService
                 ConsoleHelper.WriteColoredLine("Geçersiz giriş. Lütfen bir sayı girin.", ConsoleColors.Error);
         }
 
-        ConsoleHelper.WriteColoredLine("Çıkış için enter tuşuna basın.", ConsoleColors.Warning);
+        ConsoleHelper.WriteColored("Çıkış için enter tuşuna basın.", ConsoleColors.Debug);
        
         Console.ReadLine();
     }
