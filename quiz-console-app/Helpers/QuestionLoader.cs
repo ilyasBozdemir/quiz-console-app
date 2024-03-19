@@ -75,7 +75,8 @@ public class QuestionLoader
         }
         catch (Exception ex)
         {
-            throw new Exception("Hata oluştu: " + ex.Message);
+            ConsoleHelper.WriteColoredLine($"Hata oluştu: {ex.Message}", ConsoleColors.Error);
+            return new List<BookletQuestion>();
         }
     }
 

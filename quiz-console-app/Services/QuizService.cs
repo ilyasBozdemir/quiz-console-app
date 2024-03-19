@@ -9,15 +9,22 @@ public class QuizService
     public static List<BookletViewModel> Booklets { get; private set; }
     public static AnswerKeyCollection AnswerKeys { get; private set; }
 
+    private List<BookletQuestion> _sourceQuestions;
     private readonly QuestionLoader _questionLoader;
-    private readonly List<BookletQuestion> _sourceQuestions;
-
+ 
     public QuizService()
     {
         _questionLoader = new QuestionLoader();
-        _sourceQuestions = _questionLoader.LoadQuestionsFromJson(jsonFilePath: "software_questions.json");
         Booklets = new List<BookletViewModel>();
         AnswerKeys = new AnswerKeyCollection();
+
+        InitializeAsync().GetAwaiter().GetResult();
+
+    }
+    private async Task InitializeAsync()
+    {
+        Uri apiUrl = new Uri("https://quiz-app-data-api.vercel.app/api/get-questions");
+        _sourceQuestions = await _questionLoader.LoadQuestionsFromUrl(apiUrl);
     }
 
     public void GenerateBooklets(int shuffleCount = 1)
