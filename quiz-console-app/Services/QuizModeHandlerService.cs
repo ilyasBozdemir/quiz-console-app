@@ -14,9 +14,6 @@ public class QuizModeHandlerService
             case QuizMode.Quiz:
                new QuizModeScreen().StartQuiz();
                 break;
-            case QuizMode.DisplayBooklets:
-                new DisplayBookletScreen().Start();
-                break;
             case QuizMode.ExportData:
                 new ExportDataScreen().Start();
                 break;
@@ -28,12 +25,10 @@ public class QuizModeHandlerService
 
     public void ShowMainMenu()
     {
-
         string errorMessage = "";
         string[] options =
         {
             "Quiz Çözme Modu",
-            "Kitapçıkları ve Cevap Anahtarlarını Görüntüleme Modu",
             "Verileri Dışa Aktarma Modu",
         };
 
@@ -55,8 +50,11 @@ public class QuizModeHandlerService
         }
         bool menuState = true;
         while (menuState)
-        {
+        { 
+            
             Console.ForegroundColor = ConsoleColors.Prompt;
+            Console.Write("Seçiminizi yapın: ");
+            Console.ForegroundColor = ConsoleColors.Default;
             string userInput = Console.ReadLine();
             Console.ResetColor();
             int choice;

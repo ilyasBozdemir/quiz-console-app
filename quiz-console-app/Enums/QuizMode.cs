@@ -3,6 +3,5 @@
 public enum QuizMode
 {
     Quiz = 1,
-    DisplayBooklets = 2,
-    ExportData = 3
+    ExportData = 2
 }
