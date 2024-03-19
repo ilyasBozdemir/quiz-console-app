@@ -14,16 +14,15 @@ public class QuizService
  
     public QuizService()
     {
+        _questionLoader = new QuestionLoader();
+        Booklets = new List<BookletViewModel>();
+        AnswerKeys = new AnswerKeyCollection();
         ConsoleHelper.WriteColoredLine("Data Alınıyor.", ConsoleColors.Info);
         InitializeAsync().Wait();
         Console.Clear();
         ConsoleHelper.WriteColoredLine("Data Alındı", ConsoleColors.Info);
         Thread.Sleep(500);
         Console.Clear();
-        _questionLoader = new QuestionLoader();
-        Booklets = new List<BookletViewModel>();
-        AnswerKeys = new AnswerKeyCollection();
-
     }
     private async Task InitializeAsync()
     {

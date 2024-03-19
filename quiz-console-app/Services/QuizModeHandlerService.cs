@@ -48,6 +48,7 @@ public class QuizModeHandlerService
             ConsoleHelper.WriteColored($"{i + 1}", ConsoleColors.Info);
             Console.WriteLine($" => {options[i]}");
         }
+
         bool menuState = true;
         while (menuState)
         {
