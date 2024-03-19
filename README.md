@@ -71,7 +71,6 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 
 - C#
 - .NET Framework
-- JSON.NET kütüphanesi
 
 ## Kurulum
 
@@ -87,6 +86,5 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 4. Dalınızı ana depoya gönderin (push): `git push origin new-feature`
 5. Bir birleştirme isteği (pull request) gönderin.
 
-## Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için `LICENSE` dosyasına bakın.
+## Soruların Kaynağı
+Soruların kaynağı için [Quiz App Data API](https://quiz-app-data-api.vercel.app/api/get-questions) kullanılmıştır.

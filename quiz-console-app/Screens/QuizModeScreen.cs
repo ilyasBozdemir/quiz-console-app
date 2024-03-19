@@ -23,7 +23,7 @@ public class QuizModeScreen
     public QuizModeScreen()
     {
         _quizService = new QuizService();
-        _quizService.GenerateBooklets();
+        _quizService.GenerateBooklets(1);
         _userAnswers = new List<UserAnswerKeyViewModel>();
         _answerKeys = QuizService.AnswerKeys;
         _quiz = new Quiz(options =>

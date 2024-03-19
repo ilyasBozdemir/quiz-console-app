@@ -66,7 +66,6 @@ public class ExportService
         File.WriteAllText(xsdFilePath, xsdContent);
     }
 
-
     public void ExportToXsl(string xslFilePath)
     {
         string xslContent = @"<?xml version=""1.0"" encoding=""UTF-8""?>
@@ -123,18 +122,13 @@ public class ExportService
     private XmlDocument CreateXmlDocument(List<BookletViewModel> booklets)
     {
         XmlDocument xmlDoc = new XmlDocument();
-
         XmlElement rootElement = xmlDoc.CreateElement("Booklets");
         xmlDoc.AppendChild(rootElement);
-
-        // Her bir kitapçık için XML elementi oluştur ve kök elemente ekle
         foreach (var booklet in booklets)
         {
             XmlElement bookletElement = xmlDoc.CreateElement("Booklet");
-            // Kitapçık verilerini XML elementine ekleme işlemi burada yapılabilir
             rootElement.AppendChild(bookletElement);
         }
-
         return xmlDoc;
     }
 }

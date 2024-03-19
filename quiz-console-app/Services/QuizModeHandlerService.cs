@@ -12,7 +12,7 @@ public class QuizModeHandlerService
         switch (mode)
         {
             case QuizMode.Quiz:
-               new QuizModeScreen().StartQuiz();
+                new QuizModeScreen().StartQuiz();
                 break;
             case QuizMode.ExportData:
                 new ExportDataScreen().Start();
@@ -50,8 +50,7 @@ public class QuizModeHandlerService
         }
         bool menuState = true;
         while (menuState)
-        { 
-            
+        {
             Console.ForegroundColor = ConsoleColors.Prompt;
             Console.Write("Seçiminizi yapın: ");
             Console.ForegroundColor = ConsoleColors.Default;
@@ -72,7 +71,7 @@ public class QuizModeHandlerService
         }
 
         ConsoleHelper.WriteColored("Çıkış için enter tuşuna basın.", ConsoleColors.Debug);
-       
+
         Console.ReadLine();
     }
 

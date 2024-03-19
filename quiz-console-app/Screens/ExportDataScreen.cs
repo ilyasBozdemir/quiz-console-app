@@ -2,6 +2,10 @@
 
 public class ExportDataScreen
 {
+    public ExportDataScreen()
+    {
+
+    }
     public  void Start()
     {
 
