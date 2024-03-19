@@ -1,31 +1,24 @@
 ﻿namespace quiz_console_app.Models;
 
-
-// ScoringRules buna göre net hesaplaması yapılcaktır.
 public class QuizResultSummary
 {
     public int CorrectCount { get; set; } = 0;
     public int IncorrectCount { get; set; } = 0;
     public int BlankCount { get; set; } = 0;
-    public int NetCount => CorrectCount - (IncorrectCount + BlankCount);
-    public double SuccessPercentage => CalculateSuccessPercentage();
+    public double NetCount => CalculateNetCount();
     public int TotalQuestions { get; set; } = 0;
-
     public int QuestionCurrentNumber { get; set; } = 1;
-
-    public QuizResultSummary(int totalQuestions)
+    public ScoringRules ScoringRules { get; set; }
+    public QuizResultSummary(int totalQuestions, ScoringRules scoringRules)
     {
-        this.TotalQuestions = totalQuestions;
+        TotalQuestions = totalQuestions;
+        this.ScoringRules = scoringRules;
     }
 
-    private double CalculateSuccessPercentage()
+    private double CalculateNetCount()
     {
-        int totalQuestions = CorrectCount + IncorrectCount + BlankCount;
-        if (totalQuestions == 0)
-        {
-            return 0.0;
-        }
-
-        return (double)CorrectCount / totalQuestions * 100;
+        return (ScoringRules.PenaltyForIncorrectAnswer)
+            ? CorrectCount - ScoringRules.IncorrectAnswerScore * IncorrectCount
+            : CorrectCount;
     }
 }

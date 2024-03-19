@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using quiz_console_app.Exceptions;
 using quiz_console_app.Models;
 
 namespace quiz_console_app.Helpers;
@@ -17,19 +16,41 @@ public class QuestionLoader
                 json = File.ReadAllText(fullPath);
             }
             if (jsonSource != null)
-            {
                 json = jsonSource;
-            }
             
-        
+            if (json == null)
+                throw new ArgumentNullException("JSON dosyası yolu veya içeriği belirtilmemiş.");
+            
+
             List<BookletQuestion> questions = JsonConvert.DeserializeObject<List<BookletQuestion>>(json);
+
+            foreach (var question in questions)
+            {
+                if (!question.ValidateCorrectOptionCount())
+                    ConsoleHelper.WriteColoredLine($"{question.Id}. Soru için doğru şık sayısı geçerli değil. Sadece bir tane doğru şık olmalıdır.", ConsoleColors.Error);
+                
+                if (!question.ValidateIncorrectOptionCount())
+                    ConsoleHelper.WriteColoredLine($"{question.Id}. Soru için yanlış şık sayısı geçerli değil. Yanlış şık olmamalıdır.", ConsoleColors.Error);
+            }
+
+
+
             return questions;
         }
-        catch (JsonLoadFailedException ex)
+        catch (JsonReaderException ex)
         {
-            throw new JsonLoadFailedException("JSON dosyası yüklenirken bir hata oluştu.", ex);
+            ConsoleHelper.WriteColored($"JSON formatında bir hata oluştu: {ex.Message}", ConsoleColors.Error);
+            return new List<BookletQuestion>();
         }
+        catch (Exception ex)
+        {
+            ConsoleHelper.WriteColored($"JSON dosyası yüklenirken bir hata oluştu: {ex.Message}", ConsoleColors.Error);
+            return new List<BookletQuestion>();
+        }
+
     }
+
+
     public async Task<List<BookletQuestion>> LoadQuestionsFromUrl(Uri url)
     {
         try

@@ -6,4 +6,6 @@ public class UserAnswerKeyViewModel
     public int BookletId { get; set; }
     public int QuestionId { get; set; }
     public string UserAnswerOption { get; set; }
+    public string UserAnswerOptionText { get; set; }
+    public int UserAnswerOptionId { get; set; }
 }

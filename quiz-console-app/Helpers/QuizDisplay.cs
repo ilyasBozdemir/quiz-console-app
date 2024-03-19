@@ -1,5 +1,6 @@
 ﻿using quiz_console_app.Models;
 using quiz_console_app.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace quiz_console_app.Helpers;
 
@@ -67,10 +68,61 @@ public class QuizDisplay
     public static void EvaluateQuizResults(QuizResultSummary resultSummary)
     {
         Console.WriteLine();
+        ConsoleHelper.WriteColoredLine($"Toplam Soru Sayısı: {resultSummary.TotalQuestions}", ConsoleColors.Info);
         ConsoleHelper.WriteColoredLine($"Doğru Sayısı: {resultSummary.CorrectCount}", ConsoleColors.Success);
         ConsoleHelper.WriteColoredLine($"Yanlış Sayısı: {resultSummary.IncorrectCount}", ConsoleColors.Error);
+        ConsoleHelper.WriteColoredLine($"Yanlış Cevap Cezası Durumu : {resultSummary.ScoringRules.PenaltyForIncorrectAnswer}", ConsoleColors.Info);
         ConsoleHelper.WriteColoredLine($"Boş Sayısı: {resultSummary.BlankCount}", ConsoleColors.Warning);
-        ConsoleHelper.WriteColoredLine($"Net: {resultSummary.NetCount}", ConsoleColors.Default);
-        ConsoleHelper.WriteColoredLine($"Başarı Yüzdesi: {resultSummary.SuccessPercentage:F2}%", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine($"Net: {resultSummary.NetCount:F2}/{resultSummary.TotalQuestions}", ConsoleColors.Default);
+        ConsoleHelper.WriteColoredLine($"Başarı Yüzdesi: {resultSummary.NetCount / resultSummary.TotalQuestions * 100:F2}%", ConsoleColors.Default);
+        Console.WriteLine();
+    }
+
+    public static void DisplaySeparator()
+    {
+        ConsoleHelper.WriteColoredLine(new string('-', 50), ConsoleColors.Default);
+    }
+
+    public static void DisplayQuizAndUserData(Quiz quiz, User user)
+    {
+        ConsoleHelper.WriteColoredLine("Quiz Bilgileri: ", ConsoleColors.Title);
+
+        ConsoleHelper.WriteColored("Oluşturan: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine(quiz.Creator, ConsoleColors.Default);
+
+        ConsoleHelper.WriteColored("Başlık: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine(quiz.Title, ConsoleColors.Default);
+
+        ConsoleHelper.WriteColored("Açıklama: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine(quiz.Description, ConsoleColors.Default);
+
+        Console.WriteLine();
+
+        ConsoleHelper.WriteColoredLine("Kullanıcı Bilgileri: ", ConsoleColors.Title);
+
+        ConsoleHelper.WriteColored("Kullanıcı ID: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine(user.Id, ConsoleColors.Default);
+
+        ConsoleHelper.WriteColored("Ad Soyad : ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine($"{user.FirstName} {user.LastName}", ConsoleColors.Default);
+
+        ConsoleHelper.WriteColored("Kullanıcı Adı : ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine(user.Username, ConsoleColors.Default);
+    }
+
+    public static void ClearConsole()
+    {
+        Console.Clear();
+    }
+
+    public static void DisplayUserInfo(User user)
+    {
+        ConsoleHelper.WriteColoredLine("Kullanıcı Bilgileri:", ConsoleColors.Title);
+        ConsoleHelper.WriteColored("ID: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine($"{user.Id}", ConsoleColors.Default);
+        ConsoleHelper.WriteColored("Ad: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine($"{user.FirstName} {user.LastName}", ConsoleColors.Default);
+        ConsoleHelper.WriteColored("Kullanıcı Adı: ", ConsoleColors.Info);
+        ConsoleHelper.WriteColoredLine($"{user.Username}", ConsoleColors.Default);
     }
 }

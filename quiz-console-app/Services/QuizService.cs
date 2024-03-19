@@ -7,114 +7,151 @@ namespace quiz_console_app.Services;
 public class QuizService
 {
     public static List<BookletViewModel> Booklets { get; private set; }
-    public static List<AnswerKeyViewModel> AnswerKeys { get; private set; }
-    public static List<BookletQuestion> Questions { get; private set; }
-    private int maxShuffleCount = 10;
+    public static AnswerKeyCollection AnswerKeys { get; private set; }
+
+    private readonly QuestionLoader _questionLoader;
+    private readonly List<BookletQuestion> _sourceQuestions;
+
     public QuizService()
     {
+        _questionLoader = new QuestionLoader();
+        _sourceQuestions = _questionLoader.LoadQuestionsFromJson(jsonFilePath: "software_questions.json");
         Booklets = new List<BookletViewModel>();
-        AnswerKeys = new List<AnswerKeyViewModel>();
+        AnswerKeys = new AnswerKeyCollection();
     }
-    public void GenerateBooklets(List<BookletQuestion> questions, int shuffleCount = 1)
+
+    public void GenerateBooklets(int shuffleCount = 1)
     {
-
-        shuffleCount = Math.Min(shuffleCount, maxShuffleCount);
-        if (shuffleCount > maxShuffleCount)
-            ConsoleHelper.WriteColoredLine($"İzin verilen toplam kitapçık sayısı {maxShuffleCount}", ConsoleColors.Warning);
-        
-        Questions = questions;
-
         List<BookletQuestion> shuffledQuestions = new List<BookletQuestion>();
-
         List<BookletViewModel> booklets = new List<BookletViewModel>();
-
 
         for (int i = 0; i < shuffleCount; i++)
         {
             char prefix = (char)(65 + i);
-            string bookletName = $"{prefix}_{1}"; 
+            string bookletName = $"{prefix}_{1}";
 
-            List<BookletQuestion> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(questions);
+            List<BookletQuestion> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(_sourceQuestions);
 
             BookletViewModel booklet = new BookletViewModel
             {
                 Id = i + 1,
                 BookletName = $"Booklet {i + 1}",
                 Questions = bookletQuestions.Select(q => MapToQuestionViewModel(q)).ToList(),
-                Prefix = bookletName
+                Prefix = bookletName,
+
             };
             QuestionShuffler.ShuffleBookletQuestions(booklet);
+            GenerateAnswerKeys(booklet);
             booklets.Add(booklet);
         }
 
         Booklets = booklets;
+
     }
-    public  List<AnswerKeyViewModel> GenerateAnswerKeys()
+
+    public void GenerateAnswerKeys(BookletViewModel booklet)
     {
-        List<AnswerKeyViewModel> answerKeys = new List<AnswerKeyViewModel>();
+        List<AnswerKeyViewModel> questionAnswerKeys = new List<AnswerKeyViewModel>();
 
-        foreach (var question in Questions)
+        foreach (var question in booklet.Questions)
         {
-            var correctOption = question.QuestionOptions.FirstOrDefault(option => option.IsCorrect);
-
-            if (correctOption != null)
+            foreach (var option in question.QuestionOptions)
             {
-                answerKeys.Add(new AnswerKeyViewModel
+                if (option.IsCorrect)
                 {
-                    BookletId = 1,
-                    QuestionId = question.Id,
-                    CorrectOptionText = correctOption.Text
-                });
+                    AnswerKeyViewModel answerKey = new AnswerKeyViewModel
+                    {
+                        BookletId = booklet.Id,
+                        QuestionId = question.Id,
+                        CorrectOptionText = option.Text
+                    };
+                    questionAnswerKeys.Add(answerKey);
+                }
             }
         }
 
-        return answerKeys;
+        AnswerKeys.AddAnswerKey(booklet.Id, questionAnswerKeys);
     }
-    public void EvaluateQuizResults(List<UserAnswerKeyViewModel> userAnswers)
+
+
+
+
+    public void EvaluateQuizResults(List<UserAnswerKeyViewModel> userAnswers, int userBookletId, ScoringRules scoringRules)
     {
-        QuizResultSummary resultSummary = new QuizResultSummary(userAnswers.Count);
+        bool allAnswersInSameBooklet = true;
+        for (int i = 0; i < userAnswers.Count; i++)
 
-        ConsoleHelper.WriteColoredLine($"Cevaplar", ConsoleColors.Title);
-        foreach (var userAnswer in userAnswers)
-        {
-            string formattedQuestionNumber = FormattingHelper.FormatQuestionNumber(resultSummary.QuestionCurrentNumber, resultSummary.TotalQuestions);
-            ConsoleHelper.WriteColored($"{formattedQuestionNumber})", ConsoleColors.Default);
-            
-            if (string.IsNullOrEmpty(userAnswer.UserAnswerOption))
+            if (userAnswers[i].BookletId != userBookletId)
             {
-                resultSummary.BlankCount++;
-                ConsoleHelper.WriteColored(" - Boş", ConsoleColors.Warning);
+                allAnswersInSameBooklet = false;
+                break;
             }
-            else
+
+        QuizResultSummary resultSummary = new QuizResultSummary(userAnswers.Count, scoringRules);
+
+        List<AnswerKeyViewModel> answerKeys = AnswerKeys.GetAnswerKeys(userBookletId);
+   
+
+        if (allAnswersInSameBooklet)
+        {
+            ConsoleHelper.WriteColoredLine($"Cevaplar", ConsoleColors.Title);
+
+            for (int i = 0; i < answerKeys.Count; i++)
             {
-                var correspondingQuestion = Booklets
-                    .SelectMany(booklet => booklet.Questions)
-                    .FirstOrDefault(question => question.Id == userAnswer.QuestionId);
-
-                if (correspondingQuestion != null)
+                for (int j = 0; j < userAnswers.Count; j++)
                 {
-                    var correctOption = correspondingQuestion.QuestionOptions
-                        .FirstOrDefault(option => option.IsCorrect && option.Text == userAnswer.UserAnswerOption);
+                    if (i == j)
+                    {
+                        string formattedQuestionNumber =
+                            FormattingHelper
+                            .FormatQuestionNumber(resultSummary.QuestionCurrentNumber, resultSummary.TotalQuestions);
 
-                    if (correctOption != null)
-                    {
-                        ConsoleHelper.WriteColored($"{userAnswer.UserAnswerOption} ", ConsoleColors.Info);
-                        ConsoleHelper.WriteColored(" - Doğru", ConsoleColors.Success);
-                        resultSummary.CorrectCount++;
-                    }
-                    else
-                    {
-                        ConsoleHelper.WriteColored($"{userAnswer.UserAnswerOption} ", ConsoleColors.Info);
-                        ConsoleHelper.WriteColored(" - Yanlış", ConsoleColors.Error);
-                        resultSummary.IncorrectCount++;
+                        ConsoleHelper.WriteColored($"{formattedQuestionNumber})", ConsoleColors.Default);
+
+                        if (string.IsNullOrEmpty(userAnswers[i].UserAnswerOption))
+                        {
+                            resultSummary.BlankCount++;
+                            ConsoleHelper.WriteColored(" - Boş", ConsoleColors.Warning);
+                            Console.WriteLine();
+                        }
+                        else
+                        {
+                            var correspondingQuestion = Booklets
+                                .SelectMany(booklet => booklet.Questions)
+                                .FirstOrDefault(question => question.Id == userAnswers[j].QuestionId);
+
+                            if (correspondingQuestion != null)
+                            {
+                                var correctOption = correspondingQuestion
+                                       .QuestionOptions
+                                       .FirstOrDefault(option => option.IsCorrect);
+
+                                if (answerKeys[i].CorrectOptionText == userAnswers[j].UserAnswerOptionText)
+                                {
+                                    ConsoleHelper.WriteColored($"{OptionHelper.ToOptionLetter(userAnswers[j].UserAnswerOptionId)} - Doğru", ConsoleColors.Success);
+                                    resultSummary.CorrectCount++;
+                                    Console.WriteLine();
+                                }
+                                else
+                                {
+                                    ConsoleHelper.WriteColored($"{OptionHelper.ToOptionLetter(userAnswers[j].UserAnswerOptionId)} - Yanlış", ConsoleColors.Error);
+                                    resultSummary.IncorrectCount++;
+                                    Console.WriteLine();
+                                }
+
+                            }
+                        }
+                        resultSummary.QuestionCurrentNumber++;
                     }
                 }
             }
-            Console.WriteLine();
-            resultSummary.QuestionCurrentNumber++;
         }
+        else
+            ConsoleHelper.WriteColoredLine($"Hata: Beklenen kitapçık ID bulunamadı. Beklenen ID: {userBookletId}", ConsoleColors.Error);
+
         QuizDisplay.EvaluateQuizResults(resultSummary);
     }
+
     private static QuestionViewModel MapToQuestionViewModel(BookletQuestion question)
     {
         return new QuestionViewModel
@@ -124,7 +161,8 @@ public class QuizService
             Explanation = question.Explanation,
             Difficulty = question.Difficulty,
             QuestionOptions = question.QuestionOptions
-            .Select(o => MapToQuestionOptionViewModel(o)).ToList()
+            .Select(o => MapToQuestionOptionViewModel(o)).ToList(),
+
         };
     }
     private static QuestionOptionViewModel MapToQuestionOptionViewModel(BookletQuestionOption option)
@@ -132,7 +170,8 @@ public class QuizService
         return new QuestionOptionViewModel
         {
             Id = option.Id,
-            Text = option.Text
+            Text = option.Text,
+            IsCorrect = option.IsCorrect,
         };
     }
 }

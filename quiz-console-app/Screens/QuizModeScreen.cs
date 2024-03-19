@@ -8,69 +8,100 @@ namespace quiz_console_app.Screens;
 public class QuizModeScreen
 {
     private readonly QuizService _quizService;
-    private readonly QuestionLoader _questionLoader;
-    private readonly List<BookletQuestion> _questions;
-    private readonly List<UserAnswerKeyViewModel> _userAnswers;
-    private readonly List<AnswerKeyViewModel> _answerKeys;
+    private readonly AnswerKeyCollection _answerKeys;
     private readonly List<User> _users;
+    private List<UserAnswerKeyViewModel> _userAnswers;
 
     private User _user;
     private UserQuiz _userQuiz;
-
     private Quiz _quiz;
     private DateTime _quizEndTime;
     private DateTime _quizStartTime;
     private TimeSpan _quizDuration;
     private Timer _timer;
+
     public QuizModeScreen()
     {
-        _questionLoader = new QuestionLoader();
-        _questions = _questionLoader.LoadQuestionsFromJson(jsonFilePath: "software_questions.json");
         _quizService = new QuizService();
-        _quizService.GenerateBooklets(_questions, 1);
+        _quizService.GenerateBooklets();
         _userAnswers = new List<UserAnswerKeyViewModel>();
         _answerKeys = QuizService.AnswerKeys;
         _quiz = new Quiz(options =>
         {
-            options.DurationInMinutes = 20; 
-            options.IsOpenToPublic = true;  
+            options.DurationInMinutes = 20;
+            options.IsOpenToPublic = true;
         });
         _quizStartTime = DateTime.Now;
         _quizDuration = TimeSpan.FromMinutes(_quiz.DurationInMinutes);
         _quizEndTime = _quizStartTime.Add(_quizDuration);
         _timer = new Timer(EndQuiz, null, _quizDuration, TimeSpan.Zero);
 
-        _users= new List<User>();
+        _users = new List<User>();
     }
 
-    public void StartQuiz()
+    private User GetUserFromConsoleInput()
     {
-
-        _quiz.Title = "Yazılım Bilgisi Quiz'i";
-        _quiz.Description = "Bu quiz, yazılım geliştirmeyle ilgili genel bilginizi test etmek için hazırlanmıştır. Programlama dillerinden, algoritmik düşünceye kadar birçok konuyu içerebilir.";
-        _quiz.Creator = "@QuizConsoleApp";
-
-
-        ConsoleHelper.WriteColored(" Soru Id: ", ConsoleColors.Info);
-        Console.Write("Lütfen isminizi ve soyisminizi aralarında boşluk bırakarak girin:");
+        ConsoleHelper.WriteColored(
+            "Lütfen isminizi ve soyisminizi aralarında boşluk bırakarak girin: ",
+            ConsoleColors.Info
+        );
         string fullName = Console.ReadLine();
-        string[] nameParts = fullName.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        string[] nameParts = fullName.Split(
+            new char[] { ' ' },
+            StringSplitOptions.RemoveEmptyEntries
+        );
         string firstName = nameParts.Length > 0 ? nameParts[0] : null;
         string lastName = nameParts.Length > 1 ? nameParts[1] : null;
 
-        // Kullanıcı adını al
-        Console.Write("Lütfen kullanıcı adınızı girin:");
+        ConsoleHelper.WriteColored("Lütfen kullanıcı adınızı girin: ", ConsoleColors.Info);
         string username = Console.ReadLine();
 
         Console.ResetColor();
 
-        _user = _users.FirstOrDefault(u => u.Username == username);
+        User user = _users.FirstOrDefault(u => u.Username == username);
 
-        if (_user == null)
+        if (user == null)
         {
-            _user = new User(firstName, lastName, username);
-            _users.Add(_user);
+            user = new User(firstName, lastName, username);
+            user.Id = Guid.NewGuid();
+            _users.Add(user);
         }
+
+        return user;
+    }
+
+    private void CheckAndSetUser()
+    {
+        if (_user == null)
+            _user = GetUserFromConsoleInput();
+        else
+        {
+            QuizDisplay.DisplayUserInfo(_user);
+            QuizDisplay.DisplaySeparator();
+            ConsoleHelper.WriteColored(
+                "Varolan bir kullanıcı bulundu. Yeniden giriş yapmak ister misiniz? (E/H): ",
+                ConsoleColors.Info
+            );
+            string input = Console.ReadLine().ToUpper();
+            if (input == "E")
+                _user = GetUserFromConsoleInput();
+        }
+    }
+
+    public void StartQuiz()
+    { 
+        var Booklet = QuizService.Booklets.FirstOrDefault();
+        int questionNumber = 1;
+        int userBookletId = 1;
+        Booklet.Id = userBookletId;
+
+        _quiz.Title = "Yazılım Bilgisi Quiz'i";
+        _quiz.Description = "Bu quiz, yazılım geliştirmeyle ilgili genel bilginizi test etmek için hazırlanmıştır. ";
+        _quiz.Creator = "@QuizConsoleApp";
+
+        _quiz.ScoringRules = new ScoringRules(Booklet.Questions[0].QuestionOptions.Count);
+
+        CheckAndSetUser();
 
         _userQuiz = new UserQuiz
         {
@@ -83,9 +114,6 @@ public class QuizModeScreen
 
         _userQuiz.StartTime = _userQuiz.StartTime.Add(_quizDuration);
 
-        //
-        var Booklet = QuizService.Booklets.FirstOrDefault();
-        int questionNumber = 1;
         foreach (var question in Booklet.Questions)
         {
             ConsoleHelper.WriteColoredLine($"{questionNumber}. Soru: ", ConsoleColors.Info);
@@ -93,9 +121,10 @@ public class QuizModeScreen
 
             for (int i = 0; i < question.QuestionOptions.Count; i++)
             {
-                char optionLetter = (char)(65 + i);
+                char optionLetter = OptionHelper.ToOptionLetter(i);
 
                 ConsoleHelper.WriteColored($"{optionLetter})", ConsoleColors.Info);
+
                 ConsoleHelper.WriteColored(
                     $"{question.QuestionOptions[i].Text} ",
                     ConsoleColors.Default
@@ -109,35 +138,44 @@ public class QuizModeScreen
             ConsoleHelper.WriteColoredLine(question.AskText, ConsoleColors.Default);
             Console.ResetColor();
             Console.WriteLine();
+
             if (
                 userAnswerFromReadLine.Length == 1
-                && userAnswerFromReadLine[0] >= (char)65
-                && userAnswerFromReadLine[0] <= (char)(65 + question.QuestionOptions.Count - 1)
+                && userAnswerFromReadLine[0] >= OptionHelper.ToOptionLetter(0)
+                && userAnswerFromReadLine[0] <= OptionHelper.ToOptionLetter(question.QuestionOptions.Count - 1)
             )
             {
+
+                var optionChar = userAnswerFromReadLine[0];
+                var id = OptionHelper.FromOptionLetter(optionChar);
+
                 _userAnswers.Add(
                     new UserAnswerKeyViewModel
                     {
                         BookletId = Booklet.Id,
                         QuestionId = question.Id,
-                        UserAnswerOption = userAnswerFromReadLine
+                        Id = question.Id,
+                        UserAnswerOption = userAnswerFromReadLine,
+                        UserAnswerOptionText= question.QuestionOptions[id].Text,
+                        UserAnswerOptionId = OptionHelper.FromOptionLetter(optionChar)
                     }
                 );
                 questionNumber++;
-                Console.Clear();
+                QuizDisplay.ClearConsole();
             }
-            else if (userAnswerFromReadLine.Length == 0) // cevap null ise
+            else if (userAnswerFromReadLine.Length == 0)
             {
                 _userAnswers.Add(
                     new UserAnswerKeyViewModel
                     {
                         BookletId = Booklet.Id,
                         QuestionId = question.Id,
-                        UserAnswerOption = null
+                        UserAnswerOption = null,
+                        Id = question.Id,
                     }
                 );
                 questionNumber++;
-                Console.Clear();
+                QuizDisplay.ClearConsole();
             }
             else
             {
@@ -165,17 +203,41 @@ public class QuizModeScreen
         _userQuiz.IsCompleted = true;
 
         _user.UserQuizzes.Add(_userQuiz);
-        _quizService.EvaluateQuizResults(_userAnswers);
 
+        QuizDisplay.ClearConsole();
+
+        QuizDisplay.DisplayQuizAndUserData(_quiz, _user);
+
+        QuizDisplay.DisplaySeparator();
+        _quizService.EvaluateQuizResults(_userAnswers, userBookletId, _quiz.ScoringRules);
+
+        if (AskForQuizRetry())
+        {
+            QuizDisplay.ClearConsole();
+            RetryQuiz();
+        }
     }
 
+    public bool AskForQuizRetry()
+    {
+        Console.WriteLine();
+        Console.Write("Testi tekrar çözmek ister misiniz? (E/H): ");
+        string input = Console.ReadLine().Trim().ToUpper();
+
+        while (input != "E" && input != "H")
+        {
+            Console.Write("Geçersiz giriş. Lütfen sadece 'E' veya 'H' girin: ");
+            input = Console.ReadLine().Trim().ToUpper();
+        }
+
+        return input == "E";
+    }
 
     public void EndQuiz(object state)
     {
         if (DateTime.Now >= _quizEndTime)
-            _timer.Dispose();
+            _timer?.Dispose();
     }
-
 
     public void RetryQuiz()
     {
@@ -192,8 +254,8 @@ public class QuizModeScreen
 
         _timer = new Timer(EndQuiz, null, _quizDuration, TimeSpan.Zero);
 
-      
+        _userAnswers = new List<UserAnswerKeyViewModel>();
+
         StartQuiz();
     }
-
 }
