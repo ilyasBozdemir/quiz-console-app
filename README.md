@@ -22,7 +22,7 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
 
 ```json
 [
-  {
+ {
     "Id": 1,
     "AskText": "Android uygulama geliştirmede en yaygın kullanılan programlama dili nedir?",
     "Explanation": null,
@@ -46,6 +46,11 @@ Bu uygulama, kullanıcıların çeşitli sınav kitapçıklarından soruları ç
       {
         "Id": 4,
         "Text": "JavaScript",
+        "IsCorrect": false 
+      },
+      {
+        "Id": 5,
+        "Text": "Kotlin",
         "IsCorrect": false
       }
     ]
