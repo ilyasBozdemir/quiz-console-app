@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using quiz_console_app.Constants;
 using quiz_console_app.Enums;
 using quiz_console_app.Models;
 using quiz_console_app.ViewModels;
@@ -13,7 +14,8 @@ public class ExportService
 
     private AnswerKeyCollection _answerKeys;
 
-    private const string baseDirectory = @"D:\QuizConsoleApp";
+    private const string baseDirectory = AppConstants.BaseDirectory;
+
     private QuizService _quizService;
 
     public void Export(ExportType exportType)
