@@ -1,1 +1,1 @@
-﻿new quiz_console_app.Screens.QuizMainMenuView().Show();
+﻿new quiz_console_app.Views.QuizMainMenuView().Show();
