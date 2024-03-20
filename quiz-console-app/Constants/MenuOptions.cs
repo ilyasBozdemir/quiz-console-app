@@ -1,16 +1,20 @@
-﻿using quiz_console_app.Models;
+﻿using quiz_console_app.Enums;
+using quiz_console_app.Models;
+using quiz_console_app.Services;
 using quiz_console_app.Views;
 
 namespace quiz_console_app.Constants;
 
 public static class MenuOptions
 {
+    private static ExportDataView exportDataView = new ExportDataView();
+
     public static readonly MenuOption[] GeneralOptions =
     {
         new MenuOption(name: "Quiz Çözme Modu", action: () => new QuizModeView().StartQuiz()),
         new MenuOption(
             name: "Verileri Oluşturma ve Dışa Aktarma Modu",
-            action: () => new ExportDataView().DisplayMenuOptions()
+            action: () => exportDataView.DisplayMenuOptions()
         )
     };
 
@@ -18,11 +22,11 @@ public static class MenuOptions
     {
         new MenuOption(
             name: "Kitapçık Oluştur ve JSON Olarak Dışa Aktar",
-            action: () => new ExportDataView().CreateAndExportBookletToJson()
+            action: () => new ExportService().Export(ExportType.Json)
         ),
         new MenuOption(
             name: "Kitapçık Oluştur ve XML Olarak Dışa Aktar",
-            action: () => new ExportDataView().CreateAndExportBookletToXml()
+            action: () => new ExportService().Export(ExportType.Xml)
         ),
         new MenuOption(
             name: "Ana Menüye Dön",

@@ -3,12 +3,12 @@ using quiz_console_app.Models;
 
 namespace quiz_console_app.Services;
 
-public class MenuManager
+public class MenuService
 {
     private readonly Dictionary<int, MenuOption> menuOptions;
     public string ErrorMessage { get; set; }
 
-    public MenuManager()
+    public MenuService()
     {
         menuOptions = new Dictionary<int, MenuOption>();
         ErrorMessage = "Geçersiz seçim. Lütfen geçerli bir seçenek girin.";
@@ -48,7 +48,7 @@ public class MenuManager
 
         ErrorMessage = $"Geçersiz seçim. Lütfen {ErrorMessage} girin.";
 
-        ConsoleHelper.WriteColoredLine("Seçiminizi yapın\n".ToUpper(), ConsoleColors.Title);
+        ConsoleHelper.WriteColoredLine("\nSeçiminizi yapın\n".ToUpper(), ConsoleColors.Title);
 
         foreach (var option in menuOptions.Values)
         {
@@ -64,14 +64,17 @@ public class MenuManager
         while (menuState)
         {
             Console.ForegroundColor = ConsoleColors.Prompt;
-            Console.Write("Seçiminizi yapın: ");
+            Console.Write("\nSeçiminizi yapın: ");
             Console.ForegroundColor = ConsoleColors.Default;
             string userInput = Console.ReadLine();
             int choice;
 
             if (int.TryParse(userInput, out choice))
                 if (menuOptions.ContainsKey(choice))
+                {
                     menuOptions[choice].Action();
+                    break;
+                }
                 else
                     ConsoleHelper.WriteColoredLine("Geçersiz seçim. Lütfen listedeki bir seçeneği seçin.", ConsoleColors.Error);
             else

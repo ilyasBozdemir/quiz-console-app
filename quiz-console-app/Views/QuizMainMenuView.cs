@@ -7,7 +7,7 @@ public class QuizMainMenuView
 {
     public void Show()
     {
-        MenuManager menuManager = new MenuManager();
+        MenuService menuManager = new MenuService();
         menuManager.AddMenuOptions(MenuOptions.GeneralOptions);
         menuManager.ExecuteMenu();
     }

@@ -17,16 +17,29 @@ public class QuizService
         _questionLoader = new QuestionBuilderService();
         Booklets = new List<BookletViewModel>();
         AnswerKeys = new AnswerKeyCollection();
-        ConsoleHelper.WriteColoredLine("Data Alınıyor.", ConsoleColors.Info);
-        InitializeAsync().Wait();
-        Console.Clear();
-        ConsoleHelper.WriteColoredLine("Data Alındı", ConsoleColors.Info);
-        Thread.Sleep(500);
-        Console.Clear();
+
+        if (_sourceQuestions == null)
+        {
+            ConsoleHelper.WriteColoredLine("Sorular Sunucudan Alınıyor.", ConsoleColors.Info);
+            InitializeAsync().Wait();
+            Console.Clear();
+            ConsoleHelper.WriteColoredLine("Sorular Sunucudan Alındı", ConsoleColors.Info);
+            Thread.Sleep(500);
+            Console.Clear();
+        }
+        else
+        {
+           
+            Console.WriteLine("Kaynak sorular yüklenemedi. Lütfen bağlantınızı kontrol edin veya daha sonra tekrar deneyin.");
+        }
+
+        
+
     }
     private async Task InitializeAsync()
     {
         Uri apiUrl = new Uri("https://quiz-app-data-api.vercel.app/api/get-questions");
+
         _sourceQuestions = await _questionLoader.LoadQuestionsFromUrl(apiUrl);
     }
 
@@ -82,8 +95,6 @@ public class QuizService
 
         AnswerKeys.AddAnswerKey(booklet.Id, questionAnswerKeys);
     }
-
-
 
 
     public void EvaluateQuizResults(List<UserAnswerKeyViewModel> userAnswers, int userBookletId, ScoringRules scoringRules)

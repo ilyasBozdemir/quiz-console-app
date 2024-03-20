@@ -1,4 +1,8 @@
-﻿namespace quiz_console_app.ViewModels;
+﻿using System.Xml.Serialization;
+
+namespace quiz_console_app.ViewModels;
+
+
 
 public class BookletViewModel
 {
