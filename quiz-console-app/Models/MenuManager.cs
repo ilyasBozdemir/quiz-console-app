@@ -13,20 +13,23 @@ public class MenuManager
         ErrorMessage = "Geçersiz seçim. Lütfen geçerli bir seçenek girin.";
     }
 
-    public void AddMenuOption(MenuOption option)
-    {
-        menuOptions[option.Id] = option;
-    }
+    public void AddMenuOption(MenuOption option) => menuOptions[option.Id] = option;
+    
 
     public void AddMenuOptions(MenuOption[] options)
     {
         foreach (MenuOption option in options)
-        {
             AddMenuOption(option);
-        }
     }
 
-    public void DisplayMenu()
+    public void ExecuteMenu()
+    {
+        DisplayMenu();
+        HandleSelection();
+    }
+
+
+    private void DisplayMenu()
     {
         for (int i = 0; i < menuOptions.Count; i++) 
         {
@@ -48,7 +51,7 @@ public class MenuManager
         }
     }
 
-    public void HandleSelection()
+    private void HandleSelection()
     {
         bool menuState = true;
 
@@ -73,5 +76,6 @@ public class MenuManager
         ConsoleHelper.WriteColored("Çıkış için enter tuşuna basın.", ConsoleColors.Debug);
         Console.ReadLine();
     }
+
 }
 

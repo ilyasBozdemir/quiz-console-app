@@ -17,7 +17,6 @@ public class QuestionShuffler
         booklet.Questions = booklet.Questions.OrderBy(q => random.Next()).ToList();
     }
 
-
     public static List<BookletQuestion> ShuffleQuestionOptions(List<BookletQuestion> questions)
     {
   

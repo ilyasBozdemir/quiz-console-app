@@ -9,7 +9,6 @@ public class QuizMainMenuScreen
     {
         MenuManager menuManager = new MenuManager();
         menuManager.AddMenuOptions(MenuOptions.GeneralOptions);
-        menuManager.DisplayMenu();
-        menuManager.HandleSelection();
+        menuManager.ExecuteMenu();
     }
 }
