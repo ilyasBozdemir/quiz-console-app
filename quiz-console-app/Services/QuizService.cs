@@ -80,10 +80,12 @@ public class QuizService
         {
             foreach (var option in question.QuestionOptions)
             {
+              
                 if (option.IsCorrect)
                 {
                     AnswerKeyViewModel answerKey = new AnswerKeyViewModel
                     {
+                        Id = 0,//db olmadıgı için 0 hepsine
                         BookletId = booklet.Id,
                         QuestionId = question.Id,
                         CorrectOptionText = option.Text

@@ -2,8 +2,6 @@
 
 namespace quiz_console_app.ViewModels;
 
-
-
 public class BookletViewModel
 {
     public int Id { get; set; }
