@@ -1,5 +1,4 @@
-﻿using quiz_console_app.Helpers;
-using quiz_console_app.Services;
+﻿using quiz_console_app.Screens;
 
-QuizModeHandlerService quizModeHandlerService = new QuizModeHandlerService();
-quizModeHandlerService.ShowMainMenu();
+QuizMainMenuScreen quizModeHandlerService = new QuizMainMenuScreen();
+quizModeHandlerService.Show();
