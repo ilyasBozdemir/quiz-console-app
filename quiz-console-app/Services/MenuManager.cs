@@ -19,8 +19,13 @@ public class MenuManager
 
     public void AddMenuOptions(MenuOption[] options)
     {
+        int idCounter = menuOptions.Keys.Count > 0 ? menuOptions.Keys.Max() + 1 : 1;
+
         foreach (MenuOption option in options)
+        {
+            option.Id = idCounter++;
             AddMenuOption(option);
+        }
     }
 
     public void ExecuteMenu()

@@ -2,13 +2,13 @@
 
 public class MenuOption
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public Action Action { get; set; }
 
-    public MenuOption(int id, string name, Action action)
+    public MenuOption(string name, Action action)
     {
-        Id = id;
+        Id = Guid.NewGuid();
         Name = name;
         Action = action;
     }
