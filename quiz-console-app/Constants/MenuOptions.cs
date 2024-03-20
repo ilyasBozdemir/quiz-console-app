@@ -1,5 +1,5 @@
 ﻿using quiz_console_app.Models;
-using quiz_console_app.Screens;
+using quiz_console_app.Views;
 
 namespace quiz_console_app.Constants;
 
