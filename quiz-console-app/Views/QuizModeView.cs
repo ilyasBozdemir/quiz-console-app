@@ -240,7 +240,6 @@ public class QuizModeView
 
         if (input == "E")
             Environment.Exit(0);
-        
         else if (input == "H")
             new QuizMainMenuView().Show();
         
