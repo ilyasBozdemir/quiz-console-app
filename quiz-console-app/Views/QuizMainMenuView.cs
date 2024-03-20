@@ -1,9 +1,9 @@
 ﻿using quiz_console_app.Constants;
 using quiz_console_app.Services;
 
-namespace quiz_console_app.Screens;
+namespace quiz_console_app.Views;
 
-public class QuizMainMenuScreen
+public class QuizMainMenuView
 {
     public void Show()
     {

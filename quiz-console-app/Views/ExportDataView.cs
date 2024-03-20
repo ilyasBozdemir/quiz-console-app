@@ -1,9 +1,9 @@
 ﻿using quiz_console_app.Constants;
 using quiz_console_app.Services;
 
-namespace quiz_console_app.Screens;
+namespace quiz_console_app.Views;
 
-public class ExportDataScreen
+public class ExportDataView
 {
     public void DisplayMenuOptions()
     {
@@ -13,7 +13,7 @@ public class ExportDataScreen
         menuManager.ExecuteMenu();
     }
 
-  
+
     public void CreateAndExportBookletToJson()
     {
         Console.WriteLine("CreateAndExportBookletToJson");

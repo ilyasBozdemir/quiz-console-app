@@ -34,11 +34,4 @@ public class BookletQuestion
     {
         return incorrectCount == QuestionOptions.Count - 1 && (correctCount + incorrectCount == QuestionOptions.Count);
     }
-
-    private bool ValidateCorrectOptionCount(int correctCount, int incorrectCount)
-    {
-        return correctCount == 1 && (correctCount + incorrectCount == QuestionOptions.Count);
-    }
-
-
 }

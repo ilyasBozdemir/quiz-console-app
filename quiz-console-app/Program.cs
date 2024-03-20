@@ -1,4 +1,1 @@
-﻿using quiz_console_app.Screens;
-
-QuizMainMenuScreen quizModeHandlerService = new QuizMainMenuScreen();
-quizModeHandlerService.Show();
+﻿new quiz_console_app.Screens.QuizMainMenuView().Show();

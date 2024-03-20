@@ -3,9 +3,9 @@ using quiz_console_app.Models;
 using quiz_console_app.Services;
 using quiz_console_app.ViewModels;
 
-namespace quiz_console_app.Screens;
+namespace quiz_console_app.Views;
 
-public class QuizModeScreen
+public class QuizModeView
 {
     private readonly QuizService _quizService;
     private readonly AnswerKeyCollection _answerKeys;
@@ -20,7 +20,7 @@ public class QuizModeScreen
     private TimeSpan _quizDuration;
     private Timer _timer;
 
-    public QuizModeScreen()
+    public QuizModeView()
     {
         _quizService = new QuizService();
         _quizService.GenerateBooklets(1);
@@ -89,7 +89,7 @@ public class QuizModeScreen
     }
 
     public void StartQuiz()
-    { 
+    {
         var Booklet = QuizService.Booklets.FirstOrDefault();
         int questionNumber = 1;
         int userBookletId = 1;
@@ -156,7 +156,7 @@ public class QuizModeScreen
                         QuestionId = question.Id,
                         Id = question.Id,
                         UserAnswerOption = userAnswerFromReadLine,
-                        UserAnswerOptionText= question.QuestionOptions[id].Text,
+                        UserAnswerOptionText = question.QuestionOptions[id].Text,
                         UserAnswerOptionId = OptionHelper.FromOptionLetter(optionChar)
                     }
                 );
@@ -185,8 +185,8 @@ public class QuizModeScreen
                 {
                     optionLetter++;
                     optionsText +=
-                        (i != 0)
-                            ? (i != question.QuestionOptions.Count - 1)
+                        i != 0
+                            ? i != question.QuestionOptions.Count - 1
                                 ? $", {optionLetter}"
                                 : $" veya {optionLetter}"
                             : $"{optionLetter}";
