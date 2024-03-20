@@ -1,6 +1,7 @@
 ﻿using quiz_console_app.Helpers;
+using quiz_console_app.Models;
 
-namespace quiz_console_app.Models;
+namespace quiz_console_app.Services;
 
 public class MenuManager
 {
@@ -14,7 +15,7 @@ public class MenuManager
     }
 
     public void AddMenuOption(MenuOption option) => menuOptions[option.Id] = option;
-    
+
 
     public void AddMenuOptions(MenuOption[] options)
     {
@@ -31,10 +32,10 @@ public class MenuManager
 
     private void DisplayMenu()
     {
-        for (int i = 0; i < menuOptions.Count; i++) 
+        for (int i = 0; i < menuOptions.Count; i++)
         {
-            ErrorMessage += (i != 0)
-               ? (i != menuOptions.Count - 1)
+            ErrorMessage += i != 0
+               ? i != menuOptions.Count - 1
                    ? $", {i + 1}"
                    : $" veya {i + 1}"
                : $"{i + 1}";
