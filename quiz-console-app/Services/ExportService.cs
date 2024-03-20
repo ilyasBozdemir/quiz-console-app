@@ -25,6 +25,10 @@ public class ExportService
         Console.Write("Kaç kitapçık dışa aktarılacak?: ");
         int bookletCount = int.Parse(Console.ReadLine());
 
+        _quizService.GenerateBooklets(bookletCount);
+        _userAnswers = new List<UserAnswerKeyViewModel>();
+        _answerKeys = QuizService.AnswerKeys;
+        Booklets = QuizService.Booklets;
 
         Console.WriteLine("Dışa aktarma yöntemi seçin:");
         Console.WriteLine("1. Tüm kitapçıkları tek dosyada dışa aktar");
@@ -63,27 +67,24 @@ public class ExportService
                 break;
 
             case 2:
+                switch (exportType)
+                {
+                    case ExportType.Json:
+                        ExportEachToJson();
+                        break;
+                    case ExportType.Xml:
+                        ExportEachToXml();
+                        break;
+                    default:
+                        Console.WriteLine("Invalid export type.");
+                        break;
+                }
                 break;
 
             default:
                 Console.WriteLine("Geçersiz giriş. Lütfen 1 veya 2 girin.");
                 break;
         }
-
-
-        Console.WriteLine("Kitapçıklar oluşturuluyor.");
-        _quizService.GenerateBooklets(bookletCount);
-
-        Console.Clear();
-
-        Console.WriteLine("Kitapçıklar oluşturuldu.");
-
-        _userAnswers = new List<UserAnswerKeyViewModel>();
-        _answerKeys = QuizService.AnswerKeys;
-        Booklets = QuizService.Booklets;
-
-    
-
     }
 
 
@@ -158,7 +159,6 @@ public class ExportService
 
         Console.ReadLine();
     }
-
 
     public void ExportToXml(string bookletName)
     {
