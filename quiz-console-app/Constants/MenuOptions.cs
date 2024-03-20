@@ -25,10 +25,6 @@ public static class MenuOptions
             action: () => new ExportDataView().CreateAndExportBookletToXml()
         ),
         new MenuOption(
-            name: "Kitapçık Oluştur ve CSV Olarak Dışa Aktar",
-            action: () => new ExportDataView().CreateAndExportBookletToCsv()
-        ),
-        new MenuOption(
             name: "Ana Menüye Dön",
             action: () =>
             {

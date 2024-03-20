@@ -1,9 +1,9 @@
 ﻿using quiz_console_app.Models;
 using quiz_console_app.ViewModels;
 
-namespace quiz_console_app.Helpers;
+namespace quiz_console_app.Services;
 
-public class QuestionShuffler
+public class QuestionOptionsSuffleService
 {
     private static Random random = new Random();
 
@@ -19,7 +19,7 @@ public class QuestionShuffler
 
     public static List<BookletQuestion> ShuffleQuestionOptions(List<BookletQuestion> questions)
     {
-  
+
         foreach (var question in questions)
         {
             List<BookletQuestionOption> shuffledOptions = ShuffleOptions(question.QuestionOptions, random);

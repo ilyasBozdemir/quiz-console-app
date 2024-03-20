@@ -1,10 +1,10 @@
-﻿using quiz_console_app.Models;
+﻿using quiz_console_app.Helpers;
+using quiz_console_app.Models;
 using quiz_console_app.ViewModels;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace quiz_console_app.Helpers;
+namespace quiz_console_app.Services;
 
-public class QuizDisplay
+public class QuizConsoleDisplayService
 {
     public static void DisplayBooklets(List<BookletViewModel> booklets)
     {
@@ -78,10 +78,6 @@ public class QuizDisplay
         Console.WriteLine();
     }
 
-    public static void DisplaySeparator()
-    {
-        ConsoleHelper.WriteColoredLine(new string('-', 50), ConsoleColors.Default);
-    }
 
     public static void DisplayQuizAndUserData(Quiz quiz, User user)
     {
@@ -109,12 +105,6 @@ public class QuizDisplay
         ConsoleHelper.WriteColored("Kullanıcı Adı : ", ConsoleColors.Info);
         ConsoleHelper.WriteColoredLine(user.Username, ConsoleColors.Default);
     }
-
-    public static void ClearConsole()
-    {
-        Console.Clear();
-    }
-
     public static void DisplayUserInfo(User user)
     {
         ConsoleHelper.WriteColoredLine("Kullanıcı Bilgileri:", ConsoleColors.Title);
@@ -125,4 +115,16 @@ public class QuizDisplay
         ConsoleHelper.WriteColored("Kullanıcı Adı: ", ConsoleColors.Info);
         ConsoleHelper.WriteColoredLine($"{user.Username}", ConsoleColors.Default);
     }
+
+    public static void DisplaySeparator()
+    {
+        ConsoleHelper.WriteColoredLine(new string('-', 50), ConsoleColors.Default);
+    }
+
+    public static void ClearConsole()
+    {
+        Console.Clear();
+    }
+
+
 }

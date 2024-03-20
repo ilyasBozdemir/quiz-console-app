@@ -10,11 +10,11 @@ public class QuizService
     public static AnswerKeyCollection AnswerKeys { get; private set; }
 
     private List<BookletQuestion> _sourceQuestions;
-    private readonly QuestionLoader _questionLoader;
+    private readonly QuestionBuilderService _questionLoader;
  
     public QuizService()
     {
-        _questionLoader = new QuestionLoader();
+        _questionLoader = new QuestionBuilderService();
         Booklets = new List<BookletViewModel>();
         AnswerKeys = new AnswerKeyCollection();
         ConsoleHelper.WriteColoredLine("Data Alınıyor.", ConsoleColors.Info);
@@ -40,7 +40,7 @@ public class QuizService
             char prefix = (char)(65 + i);
             string bookletName = $"{prefix}_{1}";
 
-            List<BookletQuestion> bookletQuestions = QuestionShuffler.ShuffleQuestionOptions(_sourceQuestions);
+            List<BookletQuestion> bookletQuestions = QuestionOptionsSuffleService.ShuffleQuestionOptions(_sourceQuestions);
 
             BookletViewModel booklet = new BookletViewModel
             {
@@ -50,7 +50,7 @@ public class QuizService
                 Prefix = bookletName,
 
             };
-            QuestionShuffler.ShuffleBookletQuestions(booklet);
+            QuestionOptionsSuffleService.ShuffleBookletQuestions(booklet);
             GenerateAnswerKeys(booklet);
             booklets.Add(booklet);
         }
@@ -159,7 +159,7 @@ public class QuizService
         else
             ConsoleHelper.WriteColoredLine($"Hata: Beklenen kitapçık ID bulunamadı. Beklenen ID: {userBookletId}", ConsoleColors.Error);
 
-        QuizDisplay.EvaluateQuizResults(resultSummary);
+        QuizConsoleDisplayService.EvaluateQuizResults(resultSummary);
     }
 
     private static QuestionViewModel MapToQuestionViewModel(BookletQuestion question)

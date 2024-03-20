@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using quiz_console_app.Helpers;
 using quiz_console_app.Models;
 
-namespace quiz_console_app.Helpers;
-public class QuestionLoader
+namespace quiz_console_app.Services;
+public class QuestionBuilderService
 {
     public List<BookletQuestion> LoadQuestionsFromJson(string jsonFilePath = null, string jsonSource = null)
     {
@@ -17,10 +18,10 @@ public class QuestionLoader
             }
             if (jsonSource != null)
                 json = jsonSource;
-            
+
             if (json == null)
                 throw new ArgumentNullException("JSON dosyası yolu veya içeriği belirtilmemiş.");
-            
+
 
             List<BookletQuestion> questions = JsonConvert.DeserializeObject<List<BookletQuestion>>(json);
 
@@ -28,7 +29,7 @@ public class QuestionLoader
             {
                 if (!question.ValidateCorrectOptionCount())
                     ConsoleHelper.WriteColoredLine($"{question.Id}. Soru için doğru şık sayısı geçerli değil. Sadece bir tane doğru şık olmalıdır.", ConsoleColors.Error);
-                
+
                 if (!question.ValidateIncorrectOptionCount())
                     ConsoleHelper.WriteColoredLine($"{question.Id}. Soru için yanlış şık sayısı geçerli değil. Yanlış şık olmamalıdır.", ConsoleColors.Error);
             }

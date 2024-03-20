@@ -76,8 +76,8 @@ public class QuizModeView
             _user = GetUserFromConsoleInput();
         else
         {
-            QuizDisplay.DisplayUserInfo(_user);
-            QuizDisplay.DisplaySeparator();
+            QuizConsoleDisplayService.DisplayUserInfo(_user);
+            QuizConsoleDisplayService.DisplaySeparator();
             ConsoleHelper.WriteColored(
                 "Varolan bir kullanıcı bulundu. Yeniden giriş yapmak ister misiniz? (E/H): ",
                 ConsoleColors.Info
@@ -161,7 +161,7 @@ public class QuizModeView
                     }
                 );
                 questionNumber++;
-                QuizDisplay.ClearConsole();
+                QuizConsoleDisplayService.ClearConsole();
             }
             else if (userAnswerFromReadLine.Length == 0)
             {
@@ -175,7 +175,7 @@ public class QuizModeView
                     }
                 );
                 questionNumber++;
-                QuizDisplay.ClearConsole();
+                QuizConsoleDisplayService.ClearConsole();
             }
             else
             {
@@ -204,16 +204,16 @@ public class QuizModeView
 
         _user.UserQuizzes.Add(_userQuiz);
 
-        QuizDisplay.ClearConsole();
+        QuizConsoleDisplayService.ClearConsole();
 
-        QuizDisplay.DisplayQuizAndUserData(_quiz, _user);
+        QuizConsoleDisplayService.DisplayQuizAndUserData(_quiz, _user);
 
-        QuizDisplay.DisplaySeparator();
+        QuizConsoleDisplayService.DisplaySeparator();
         _quizService.EvaluateQuizResults(_userAnswers, userBookletId, _quiz.ScoringRules);
 
         if (AskForQuizRetry())
         {
-            QuizDisplay.ClearConsole();
+            QuizConsoleDisplayService.ClearConsole();
             RetryQuiz();
         }
     }
@@ -221,17 +221,35 @@ public class QuizModeView
     public bool AskForQuizRetry()
     {
         Console.WriteLine();
-        Console.Write("Testi tekrar çözmek ister misiniz? (E/H): ");
+        ConsoleHelper.WriteColored($"Testi tekrar çözmek için ", ConsoleColors.Info);
+        ConsoleHelper.WriteColored($"(R)", ConsoleColors.Success);
+        ConsoleHelper.WriteColored($", çıkmak için ", ConsoleColors.Info);
+        ConsoleHelper.WriteColored($"(E)", ConsoleColors.Error);
+        ConsoleHelper.WriteColored($", ana menüye dönmek için ", ConsoleColors.Info);
+        ConsoleHelper.WriteColored($"(H) ", ConsoleColors.Default);
+        ConsoleHelper.WriteColored($"tuşlayın.", ConsoleColors.Info);
+        Console.WriteLine();
+
         string input = Console.ReadLine().Trim().ToUpper();
 
-        while (input != "E" && input != "H")
+        while (input != "E" && input != "H" && input != "R")
         {
-            Console.Write("Geçersiz giriş. Lütfen sadece 'E' veya 'H' girin: ");
+            Console.Write("Geçersiz giriş. Lütfen sadece 'E', 'H' veya 'R' girin: ");
             input = Console.ReadLine().Trim().ToUpper();
         }
 
-        return input == "E";
+        if (input == "E")
+            Environment.Exit(0);
+        
+        else if (input == "H")
+            new QuizMainMenuView().Show();
+        
+        else if (input == "R")
+            return true;
+
+        return false;
     }
+
 
     public void EndQuiz(object state)
     {
