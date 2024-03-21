@@ -1,1 +1,0 @@
-﻿new quiz_console_app.Views.QuizMainMenuView().Show();
