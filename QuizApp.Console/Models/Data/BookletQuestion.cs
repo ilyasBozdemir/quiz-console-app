@@ -4,11 +4,11 @@ namespace QuizAppConsole.Models.Data;
 
 public class BookletQuestion
 {
-    public int Id { get; set; }
-    public string AskText { get; set; }
-    public string Explanation { get; set; }
-    public DifficultyLevel Difficulty { get; set; }
-    public List<BookletQuestionOption> QuestionOptions { get; set; }
+    public int Id { get; set; } = 0;
+    public string AskText { get; set; } = "";
+    public string Explanation { get; set; } = "";
+    public DifficultyLevel Difficulty { get; set; } = DifficultyLevel.Easy;
+    public List<BookletQuestionOption> QuestionOptions { get; set; } = new List<BookletQuestionOption>();
 
     public BookletQuestion()
     {

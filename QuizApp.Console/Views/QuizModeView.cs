@@ -9,10 +9,10 @@ namespace QuizAppConsole.Views;
 
 public class QuizModeView
 {
-    private readonly QuizService _quizService;
-    private readonly AnswerKeyCollection _answerKeys;
-    private readonly List<User> _users;
-    private List<UserAnswerKeyViewModel> _userAnswers;
+    private readonly QuizService _quizService = new QuizService();
+    private readonly AnswerKeyCollection _answerKeys = new AnswerKeyCollection();
+    private readonly List<User> _users = new List<User>();
+    private List<UserAnswerKeyViewModel> _userAnswers= new List<UserAnswerKeyViewModel>();
 
     private User _user;
     private UserQuiz _userQuiz;
@@ -37,8 +37,6 @@ public class QuizModeView
         _quizDuration = TimeSpan.FromMinutes(_quiz.DurationInMinutes);
         _quizEndTime = _quizStartTime.Add(_quizDuration);
         _timer = new Timer(EndQuiz, null, _quizDuration, TimeSpan.Zero);
-
-        _users = new List<User>();
     }
 
     private User GetUserFromConsoleInput()
@@ -47,16 +45,16 @@ public class QuizModeView
             "Lütfen isminizi ve soyisminizi aralarında boşluk bırakarak girin: ",
             ConsoleColors.Info
         );
-        string fullName = Console.ReadLine();
+        string fullName = Console.ReadLine() ?? "";
         string[] nameParts = fullName.Split(
             new char[] { ' ' },
             StringSplitOptions.RemoveEmptyEntries
         );
-        string firstName = nameParts.Length > 0 ? nameParts[0] : null;
-        string lastName = nameParts.Length > 1 ? nameParts[1] : null;
+        string firstName = nameParts.Length > 0 ? nameParts[0] : "";
+        string lastName = nameParts.Length > 1 ? nameParts[1] : "";
 
         ConsoleHelper.WriteColored("Lütfen kullanıcı adınızı girin: ", ConsoleColors.Info);
-        string username = Console.ReadLine();
+        string username = Console.ReadLine() ?? "";
 
         Console.ResetColor();
 
@@ -84,7 +82,10 @@ public class QuizModeView
                 "Varolan bir kullanıcı bulundu. Yeniden giriş yapmak ister misiniz? (E/H): ",
                 ConsoleColors.Info
             );
-            string input = Console.ReadLine().ToUpper();
+            string input = Console.ReadLine() ?? "";
+
+            input = input.ToUpper();
+
             if (input == "E")
                 _user = GetUserFromConsoleInput();
         }
@@ -92,7 +93,7 @@ public class QuizModeView
 
     public void StartQuiz()
     {
-        var Booklet = QuizService.Booklets.FirstOrDefault();
+        var Booklet = QuizService.Booklets.FirstOrDefault() ?? new BookletViewModel();
         int questionNumber = 1;
         int userBookletId = 1;
         Booklet.Id = userBookletId;
@@ -136,7 +137,8 @@ public class QuizModeView
             Console.Write($"Cevabınızı girin (Boş bırakmak için Enter tuşuna basın) : ");
 
             Console.ForegroundColor = ConsoleColors.Debug;
-            string userAnswerFromReadLine = Console.ReadLine().ToUpper();
+            string userAnswerFromReadLine = Console.ReadLine() ?? "";
+            userAnswerFromReadLine= userAnswerFromReadLine.ToUpper();
             ConsoleHelper.WriteColoredLine(question.AskText, ConsoleColors.Default);
             Console.ResetColor();
             Console.WriteLine();
@@ -172,7 +174,7 @@ public class QuizModeView
                     {
                         BookletId = Booklet.Id,
                         QuestionId = question.Id,
-                        UserAnswerOption = null,
+                        UserAnswerOption = "",
                         Id = question.Id,
                     }
                 );
@@ -232,12 +234,15 @@ public class QuizModeView
         ConsoleHelper.WriteColored($"tuşlayın.", ConsoleColors.Info);
         Console.WriteLine();
 
-        string input = Console.ReadLine().Trim().ToUpper();
+        string input = Console.ReadLine() ?? "";
+
+        input = input.Trim().ToUpper();
 
         while (input != "E" && input != "H" && input != "R")
         {
             Console.Write("Geçersiz giriş. Lütfen sadece 'E', 'H' veya 'R' girin: ");
-            input = Console.ReadLine().Trim().ToUpper();
+            input = Console.ReadLine() ?? "";
+            input = input.Trim().ToUpper();
         }
 
         if (input == "E")
@@ -252,7 +257,7 @@ public class QuizModeView
     }
 
 
-    public void EndQuiz(object state)
+    public void EndQuiz(object? state)
     {
         if (DateTime.Now >= _quizEndTime)
             _timer?.Dispose();
@@ -271,7 +276,7 @@ public class QuizModeView
 
         _timer?.Dispose();
 
-        _timer = new Timer(EndQuiz, null, _quizDuration, TimeSpan.Zero);
+        _timer = new Timer(EndQuiz, "", _quizDuration, TimeSpan.Zero);
 
         _userAnswers = new List<UserAnswerKeyViewModel>();
 

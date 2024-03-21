@@ -1,9 +1,9 @@
 ﻿namespace QuizAppConsole.Enums;
 
+[Flags]
 public enum ExportType
 {
-    Json,
-    Xml,
-    Csv
+    JSON,
+    XML,
 }
 

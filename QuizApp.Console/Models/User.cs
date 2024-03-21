@@ -2,11 +2,13 @@
 
 public class User
 {
-    public Guid Id { get; set; }
-    public string Username { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public List<UserQuiz> UserQuizzes { get; set; }
+    public Guid Id { get; set; }= Guid.NewGuid();
+    public string Username { get; set; } = "";
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public List<UserQuiz> UserQuizzes { get; set; }= new List<UserQuiz>();
+
+    public User()  { }
 
     public User(string firstName, string lastName, string username)
     {

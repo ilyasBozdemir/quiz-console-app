@@ -2,6 +2,6 @@
 
 public class QuizAnswerOption
 {
-    public int Id { get; set; }
-    public string Text { get; set; }
+    public int Id { get; set; } = 0;
+    public string Text { get; set; } = "";
 }

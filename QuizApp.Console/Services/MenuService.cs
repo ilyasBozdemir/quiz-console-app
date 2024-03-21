@@ -68,7 +68,7 @@ public class MenuService
             Console.ForegroundColor = ConsoleColors.Prompt;
             Console.Write(AppConstants.CHOOSE_SELECTION_PROMPT);
             Console.ForegroundColor = ConsoleColors.Default;
-            string userInput = Console.ReadLine();
+            string userInput = Console.ReadLine() ?? "";
             int choice;
 
             if (int.TryParse(userInput, out choice))

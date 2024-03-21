@@ -22,11 +22,11 @@ public static class MenuOptions
     {
         new MenuOption(
             name: string.Format(AppConstants.CREATE_AND_EXPORT_FILE_TITLE_TEMPLATE,AppConstants.JSON_FORMAT_NAME),
-            action: () => new ExportService().Export(ExportType.Json)
+            action: () => new ExportService().Export(ExportType.JSON)
         ),
         new MenuOption(
             name: string.Format(AppConstants.CREATE_AND_EXPORT_FILE_TITLE_TEMPLATE,AppConstants.XML_FORMAT_NAME),
-            action: () => new ExportService().Export(ExportType.Xml)
+            action: () => new ExportService().Export(ExportType.XML)
         ),
         new MenuOption(
             name: AppConstants.RETURN_TO_MAIN_MENU,

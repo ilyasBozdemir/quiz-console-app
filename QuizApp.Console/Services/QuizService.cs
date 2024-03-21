@@ -9,8 +9,8 @@ namespace QuizAppConsole.Services;
 
 public class QuizService
 {
-    public static List<BookletViewModel> Booklets { get; private set; }
-    public static AnswerKeyCollection AnswerKeys { get; private set; }
+    public static List<BookletViewModel> Booklets { get; private set; } = new List<BookletViewModel>();
+    public static AnswerKeyCollection AnswerKeys { get; private set; } = new AnswerKeyCollection();
 
     private List<BookletQuestion> _sourceQuestions;
     private readonly QuestionBuilderService _questionLoader;

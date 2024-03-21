@@ -41,6 +41,8 @@ public class AppConstants
     public const string QUESTIONS_LOADED_SUCCESS_MESSAGE = "Sorular başarıyla yüklendi.";
     public const string QUIZ_TIME_EXPIRED_MESSAGE = "Quiz süresi doldu. Quiz sonlandırılıyor.";
     public const string QUIZ_TIME_NOT_EXPIRED_MESSAGE = "Quiz süresi dolmadı, ancak sonlandırmak istiyor musunuz? (E/H)";
+    public const string BOOKLET_EXPORT_SUCCESS_MESSAGE_TEMPLATE = "'{0}' kitapçığı başarıyla JSON olarak dışa aktarıldı. Dosya yolu: {1}";
+    public const string ANSWER_KEYS_EXPORT_SUCCESS_MESSAGE_TEMPLATE = "'{0}' kitapçığının cevap anahtarları başarıyla JSON olarak dışa aktarıldı. Dosya yolu: {1}";
 
     #endregion
 
@@ -70,6 +72,8 @@ public class AppConstants
     public const string DATA_FETCH_ERROR_MESSAGE_TEMPLATE = "Veriler API'den alınamadı. Hata kodu: {0}";
     public const string ERROR_OCCURRED_MESSAGE = "Bir hata oluştu: {0}";
     public const string BOOKLET_ID_NOT_FOUND_ERROR_MESSAGE_TEMPLATE = "Hata: Beklenen kitapçık ID bulunamadı. Beklenen ID: {0}";
+    public const string QUESTIONS_LOAD_FAILED_MESSAGE = "Sorular yüklenirken bir hata oluştu. Kaynakta sorun olabilir veya boş bir yanıt döndü.";
+    public const string FILE_DESERIALIZE_ERROR_MESSAGE = "Dosya ayrıştırılırken bir hata oluştu. Dosya formatını kontrol edin ve tekrar deneyin.";
 
     #endregion
 
@@ -111,8 +115,7 @@ public class AppConstants
 
     public const string QUESTIONS_ARE_BEING_FETCHED_MESSAGE = "Sorular Sunucudan Alınıyor.";
     public const string QUESTIONS_FETCHED_SUCCESSFULLY_MESSAGE = "Sorular Sunucudan Başarıyla Alındı";
-    public const string QUESTIONS_LOAD_FAILED_MESSAGE = "Kaynak sorular yüklenemedi. Lütfen bağlantınızı kontrol edin veya daha sonra tekrar deneyin.";
-
+    public const string NETWORK_LOAD_FAILED_MESSAGE = "Kaynak sorular yüklenemedi. Lütfen bağlantınızı kontrol edin veya daha sonra tekrar deneyin.";
 
     #endregion
 

@@ -9,31 +9,31 @@ namespace QuizAppConsole.Services;
 
 public class ExportService
 {
-    public static List<BookletViewModel> Booklets { get; private set; }
-
-    private AnswerKeyCollection _answerKeys;
-
+    public static List<BookletViewModel> Booklets { get; private set; } = new List<BookletViewModel>();
+    private AnswerKeyCollection _answerKeys { get; set; } = new AnswerKeyCollection();
     private const string BaseDirectory = AppConstants.BASE_DIRECTORY;
-
-    private QuizService _quizService;
-
+    private QuizService _quizService { get; set; } = new QuizService();
+ 
     public void Export(ExportType exportType)
     {
-        _quizService = new QuizService();
-
         Console.Write(AppConstants.EXPORT_BOOKLET_QUESTION);
-        int bookletCount = int.Parse(Console.ReadLine());
+
+        string input = Console.ReadLine() ?? "";
+        int bookletCount;
+        if (!int.TryParse(input, out bookletCount))
+            bookletCount = 0;
 
         _quizService.GenerateBooklets(bookletCount);
         _answerKeys = QuizService.AnswerKeys;
         Booklets = QuizService.Booklets;
 
+
         switch (exportType)
         {
-            case ExportType.Json:
+            case ExportType.JSON:
                 ExportEachToJson();
                 break;
-            case ExportType.Xml:
+            case ExportType.XML:
                 ExportEachToXml();
                 break;
             default:

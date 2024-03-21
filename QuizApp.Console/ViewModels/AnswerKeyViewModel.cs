@@ -2,9 +2,9 @@
 
 public class AnswerKeyViewModel
 {
-    public int Id { get; set; }
-    public int BookletId { get; set; }
-    public int QuestionId { get; set; }
-    public int CorrectOptionId { get; set; }
-    public string CorrectOptionText { get; set; }
+    public int Id { get; set; } = 0;
+    public int BookletId { get; set; } = 0;
+    public int QuestionId { get; set; } = 0;
+    public int CorrectOptionId { get; set; } = 0;
+    public string CorrectOptionText { get; set; } = "";
 }

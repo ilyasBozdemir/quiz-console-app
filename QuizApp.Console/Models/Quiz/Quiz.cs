@@ -4,19 +4,24 @@ namespace QuizAppConsole.Models.Quiz;
 
 public class Quiz
 {
-    public Guid Id { get; set; }
-    public string Title { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Title { get; set; } = "";
+    public DateTime StartTime { get; set; } = DateTime.Now;
     public int DurationInMinutes { get; set; } = 20;
-    public bool IsActive { get; set; }
-    public bool IsOpenToPublic { get; set; }
-    public string Description { get; set; }
-    public string Creator { get; set; }
+    public DateTime EndTime { get; set; } = DateTime.Now;
+
+    public bool IsActive { get; set; } = false;
+    public bool IsOpenToPublic { get; set; } = false;
+    public string Description { get; set; } = "";
+    public string Creator { get; set; } = "";
 
     public List<QuizQuestion> Questions { get; set; }
     public ScoringRules ScoringRules { get; set; }
 
+    public Quiz()
+    {
+        
+    }
     public Quiz(Action<QuizOptions> options)
     {
         QuizOptions quizOptions = new QuizOptions();
